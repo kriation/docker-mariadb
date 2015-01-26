@@ -11,8 +11,7 @@ Securing the DB instance is performed using the packaged script
 are both disabled by default, and the test DB removed.
 
 ## Credentials
-The all privilege user in the DB is **root**
-
+The all privilege user in the DB is **root**  
 The credential is set to **toor**
 
 Do **NOT** go to production with this image and the above default set.
@@ -21,16 +20,14 @@ Do **NOT** go to production with this image and the above default set.
 I designed the image to be self-sufficient at runtime requiring little
 additional configuration once started.
 
-Starting a fresh container (with NAT) only requires the following:
-
+Starting a fresh container (with NAT) only requires the following:  
 ```
 docker run -P kriation/centos7-mariadb10
 ```
 
 To enable network access from docker0, I've added a grant script in the 
 image that generates the grant, and flushes privilegs making it active
-immediately.
-
+immediately.  
 ```
 docker exec [container_name] /con/context/grant.sh
 ```
