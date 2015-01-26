@@ -2,10 +2,12 @@ FROM kriation/centos7
 
 MAINTAINER Armen Kaleshian <armen@kriation.com>
 
-ENV DB_ROOTPW toor
-
 # Copy repo file
 COPY mariadb.repo /etc/yum.repos.d/
+
+# Copy grant script
+COPY grant.sh /con/context/
+RUN chmod +x /con/context/grant.sh
 
 # Install MariaDB Server and supporting packages
 RUN yum -y install MariaDB-server hostname sysvinit-tools && \
@@ -15,14 +17,21 @@ RUN yum -y install MariaDB-server hostname sysvinit-tools && \
 RUN chown mysql:mysql /etc/my.cnf && \
     chown -R mysql:mysql /etc/my.cnf.d && \
     /etc/init.d/mysql start && \ 
-    echo -e "\nY\n${DB_ROOTPW}\n${DB_ROOTPW}\nY\nY\nY\nY\n" | \
+    echo -e "\nY\ntoor\ntoor\nY\nY\nY\nY\n" | \
     /usr/bin/mysql_secure_installation && \
-    /etc/init.d/mysql stop
+    /etc/init.d/mysql stop 
+
+# Migrate and expose
+RUN chown -R mysql:mysql /con && \
+    mv /var/lib/mysql/* /con/data/. && \
+    mv /etc/my.cnf /con/configuration/. && \
+    mv /etc/my.cnf.d /con/configuration/. && \
+    sed -i 's/etc/con\/configuration/' /con/configuration/my.cnf 
 
 EXPOSE 3306
 
-USER mysql
-
-VOLUME ["/etc/my.cnf.d","/var/lib/mysql"]
-
-CMD ["/usr/sbin/mysqld"]
+ENTRYPOINT ["/usr/sbin/mysqld", \
+	    "--defaults-extra-file=/con/configuration/my.cnf", \
+	    "--datadir=/con/data", \
+	    "--socket=/con/data/mysql/mysql.sock", \
+	    "--user=mysql"]
