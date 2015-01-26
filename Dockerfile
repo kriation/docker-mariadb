@@ -7,14 +7,14 @@ COPY mariadb.repo /etc/yum.repos.d/
 
 # Copy grant script
 COPY grant.sh /con/context/
-RUN chmod +x /con/context/grant.sh
 
 # Install MariaDB Server and supporting packages
 RUN yum -y install MariaDB-server hostname sysvinit-tools && \
     yum -y clean all
 
 # Secure the MariaDB Server
-RUN chown mysql:mysql /etc/my.cnf && \
+RUN chmod u+x /con/context/grant.sh && \
+    chown mysql:mysql /etc/my.cnf && \
     chown -R mysql:mysql /etc/my.cnf.d && \
     /etc/init.d/mysql start && \ 
     echo -e "\nY\ntoor\ntoor\nY\nY\nY\nY\n" | \
