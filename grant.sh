@@ -31,7 +31,8 @@ echo "Setting grant for root from $IP"
 
 /usr/bin/mysql -u root --password=toor \
         -S /con/data/mysql/mysql.sock mysql \
-        -e "grant all on *.* to root@$IP identified by 'toor';"
+        -e "grant all on *.* to root@$IP identified by 'toor' with 
+	    GRANT OPTION;"
 
 #### Self-explanatory
 /usr/bin/mysqladmin -u root --password=toor \
