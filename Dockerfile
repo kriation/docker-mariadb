@@ -19,10 +19,9 @@ RUN chmod u+x /con/context/grant.sh && \
     /etc/init.d/mysql start && \ 
     echo -e "\nY\ntoor\ntoor\nY\nY\nY\nY\n" | \
     /usr/bin/mysql_secure_installation && \
-    /etc/init.d/mysql stop 
-
-# Migrate and expose
-RUN chown -R mysql:mysql /con && \
+    /etc/init.d/mysql stop && \
+    # Migrate and expose
+    chown -R mysql:mysql /con && \
     mv /var/lib/mysql/* /con/data/. && \
     mv /etc/my.cnf /con/configuration/. && \
     mv /etc/my.cnf.d /con/configuration/. && \
