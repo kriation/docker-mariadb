@@ -32,5 +32,5 @@ EXPOSE 3306
 ENTRYPOINT ["/usr/sbin/mysqld", \
 	    "--defaults-extra-file=/con/configuration/my.cnf", \
 	    "--datadir=/con/data", \
-	    "--socket=/con/data/mysql/mysql.sock", \
+	    "--socket=/con/data/mysql.sock", \
 	    "--user=mysql"]
